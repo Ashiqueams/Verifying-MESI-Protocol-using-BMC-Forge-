@@ -132,3 +132,37 @@ pred swmr {
             all o: others[c] | o.status = Invalid
         }
 }
+
+
+-- Run 1: Sanity check — find a valid initial status
+run {
+    init
+} for exactly 2 Core, 5 Int
+
+-- Run 2: Verify atMostOneModified holds across 5 steps
+check {
+    init and
+    always { step or stutter } =>
+    always { atMostOneModified }
+} for exactly 2 Core
+
+
+-- Run 3: Finding a valid trace of full SWMR across 5 steps
+check {
+    init and
+    always { step or stutter } =>
+    always { swmr }
+} for exactly 2 Core
+
+-- Witness Run 4: Verify no core at Modified+Shared simultaneuously
+check {
+    init and
+    always { step or stutter } =>
+    always { noModifiedAndShared }
+} for exactly 2 Core
+
+-- Witness Run 5: Finding a valid trace where a write happens 
+run {
+    init
+    eventually { some c: Core | c.status = Modified }
+} for exactly 2 Core
