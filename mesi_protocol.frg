@@ -103,3 +103,32 @@ pred stutter {
     Bus.pendingWrite' = Bus.pendingWrite
     Bus.pendingRead'  = Bus.pendingRead
 }
+
+-- SAFETY PROPERTIES 
+
+-- PROPERTY 1: At most one core may be in Modified status at any time
+pred atMostOneModified {
+    lone status.Modified
+}
+
+-- PROPERTY 2: If any core is in Modified status, all others must be Invalid
+pred modifiedImpliesOthersInvalid {
+    all c: Core |
+        c.status = Modified =>{
+            all o: others[c] | o.status = Invalid
+            }
+}
+
+-- PROPERTY 3: No core may be simultaneously Modified and Shared
+pred noModifiedAndShared {
+    no (status.Modified & status.Shared)
+}
+
+-- PROPERTY 4 (SWMR):At most one WRITER (Modified/Exclusive) OR any number of READERS (Shared)
+-- but never both at the same time across different cores
+pred swmr {
+    all c: Core |
+        (c.status = Modified or c.status = Exclusive) =>{
+            all o: others[c] | o.status = Invalid
+        }
+}
