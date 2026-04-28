@@ -30,9 +30,7 @@ one sig Bus {
 fun others[c: Core]: set Core { Core - c }
 
 
--- ============================================================
--- SECTION 2: INITIAL STATE
--- ============================================================
+-- INITIAL STATE
 
 pred init {
     all c: Core | c.status = Invalid
@@ -42,9 +40,7 @@ pred init {
 }
 
 
--- ============================================================
--- SECTION 3: BUS QUEUE HELPERS
--- ============================================================
+-- BUS QUEUE HELPERS
 
 pred enqueue[msg: BusMsg] {
     no Bus.queue0 => {
@@ -73,9 +69,7 @@ pred dequeue {
 }
 
 
--- ============================================================
--- SECTION 4: TRANSITION RELATIONS
--- ============================================================
+-- TRANSITION RELATIONS
 
 -- TRANSITION: Local Read (PrRd)
 pred localRead[c: Core, msg: BusMsg] {
@@ -194,9 +188,7 @@ pred evict[c: Core] {
 }
 
 
--- ============================================================
--- SECTION 5: COMBINED TRANSITION RELATION
--- ============================================================
+-- COMBINED TRANSITION RELATION
 
 pred step {
     some c: Core, msg: BusMsg |
@@ -215,9 +207,7 @@ pred stutter {
 }
 
 
--- ============================================================
--- SECTION 6: SAFETY PROPERTIES
--- ============================================================
+-- SAFETY PROPERTIES
 
 pred atMostOneModified {
     lone status.Modified
@@ -248,9 +238,7 @@ pred noModifiedDuringBusRdX {
 }
 
 
--- ============================================================
--- SECTION 7: BOUNDED MODEL CHECKING RUNS
--- ============================================================
+-- BOUNDED MODEL CHECKING RUNS
 
 run {
     init
